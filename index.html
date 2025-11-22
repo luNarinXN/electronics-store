@@ -41,6 +41,40 @@
             padding: 0 20px;
         }
 
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--light);
+            border-top: 5px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Header & Navigation */
         header {
             background: white;
@@ -166,7 +200,8 @@
             transition: all 0.3s;
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover,
+        .nav-links a.active {
             background: var(--secondary);
             color: white;
         }
@@ -182,6 +217,7 @@
             visibility: hidden;
             transform: translateY(10px);
             transition: all 0.3s;
+            z-index: 1001;
         }
 
         .nav-links li:hover .dropdown-menu {
@@ -200,9 +236,28 @@
             color: var(--text);
         }
 
+        /* Main Content */
+        .main-content {
+            margin-top: 140px;
+            min-height: calc(100vh - 300px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Hero Section */
         .hero {
-            margin-top: 140px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             padding: 80px 0;
@@ -274,6 +329,7 @@
             transition: transform 0.3s;
             text-decoration: none;
             color: var(--text);
+            cursor: pointer;
         }
 
         .category-card:hover {
@@ -286,16 +342,12 @@
             margin-bottom: 15px;
         }
 
-        /* Featured Products */
-        .featured-products {
-            padding: 60px 0;
-            background: var(--light);
-        }
-
+        /* Products */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
+            margin-bottom: 40px;
         }
 
         .product-card {
@@ -304,6 +356,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            cursor: pointer;
         }
 
         .product-card:hover {
@@ -368,62 +421,96 @@
             background: #2980b9;
         }
 
-        /* Promo Banner */
-        .promo-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-            margin: 60px 0;
+        /* Cart */
+        .cart-items {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .promo-banner h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        /* Features */
-        .features {
-            padding: 60px 0;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 30px 20px;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 20px;
-        }
-
-        /* Newsletter */
-        .newsletter {
-            background: var(--primary);
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-        }
-
-        .newsletter-form {
-            max-width: 500px;
-            margin: 0 auto;
+        .cart-item {
             display: flex;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0 20px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .newsletter-form input {
-            flex: 1;
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            text-align: right;
+            margin-top: 30px;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* Forms */
+        .auth-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
             padding: 12px 15px;
-            border: none;
+            border: 1px solid #ddd;
             border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
         }
 
         /* Footer */
@@ -431,6 +518,7 @@
             background: var(--dark);
             color: white;
             padding: 60px 0 30px;
+            margin-top: 60px;
         }
 
         .footer-content {
@@ -508,13 +596,18 @@
                 font-size: 2.2rem;
             }
             
-            .newsletter-form {
-                flex-direction: column;
+            .main-content {
+                margin-top: 180px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="container top-bar-content">
@@ -523,8 +616,8 @@
                 <span><i class="fas fa-envelope"></i> info@techhub.ua</span>
             </div>
             <div class="auth-links">
-                <a href="#"><i class="fas fa-user"></i> Вхід</a>
-                <a href="#"><i class="fas fa-user-plus"></i> Реєстрація</a>
+                <a href="#" class="auth-link" data-page="login"><i class="fas fa-user"></i> Вхід</a>
+                <a href="#" class="auth-link" data-page="register"><i class="fas fa-user-plus"></i> Реєстрація</a>
             </div>
         </div>
     </div>
@@ -533,15 +626,15 @@
     <header>
         <div class="container">
             <nav>
-                <a href="#" class="logo">Tech<span>Hub</span></a>
+                <a href="#" class="logo" data-page="home">Tech<span>Hub</span></a>
                 <div class="search-cart">
                     <div class="search-box">
-                        <input type="text" placeholder="Пошук товарів...">
-                        <button><i class="fas fa-search"></i></button>
+                        <input type="text" placeholder="Пошук товарів..." id="searchInput">
+                        <button id="searchBtn"><i class="fas fa-search"></i></button>
                     </div>
-                    <a href="#" class="cart-icon">
+                    <a href="#" class="cart-icon" data-page="cart">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">3</span>
+                        <span class="cart-count">0</span>
                     </a>
                 </div>
             </nav>
@@ -550,236 +643,171 @@
         <div class="main-nav">
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="#">Головна</a></li>
+                    <li><a href="#" class="nav-link active" data-page="home">Головна</a></li>
                     <li>
-                        <a href="#">Категорії <i class="fas fa-chevron-down"></i></a>
+                        <a href="#" class="nav-link" data-page="catalog">Категорії <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-menu">
-                            <a href="#">Смартфони</a>
-                            <a href="#">Ноутбуки</a>
-                            <a href="#">Планшети</a>
-                            <a href="#">Телевізори</a>
-                            <a href="#">Аудіотехніка</a>
+                            <a href="#" class="nav-link" data-page="category" data-category="smartphones">Смартфони</a>
+                            <a href="#" class="nav-link" data-page="category" data-category="laptops">Ноутбуки</a>
+                            <a href="#" class="nav-link" data-page="category" data-category="tablets">Планшети</a>
+                            <a href="#" class="nav-link" data-page="category" data-category="tvs">Телевізори</a>
+                            <a href="#" class="nav-link" data-page="category" data-category="audio">Аудіотехніка</a>
                         </div>
                     </li>
-                    <li><a href="#">Акції</a></li>
-                    <li><a href="#">Новинки</a></li>
-                    <li><a href="#">Бренди</a></li>
-                    <li><a href="#">Доставка</a></li>
-                    <li><a href="#">Гарантія</a></li>
-                    <li><a href="#">Контакти</a></li>
+                    <li><a href="#" class="nav-link" data-page="sales">Акції</a></li>
+                    <li><a href="#" class="nav-link" data-page="about">Про нас</a></li>
+                    <li><a href="#" class="nav-link" data-page="contact">Контакти</a></li>
                 </ul>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>Технології майбутнього вже сьогодні</h1>
-            <p>Широкий вибір електроніки за найкращими цінами. Гарантія якості та швидка доставка.</p>
-            <a href="#" class="btn">Перейти до каталогу</a>
-            <a href="#" class="btn btn-secondary">Дізнатися більше</a>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Home Page -->
+        <div class="page active" id="home">
+            <section class="hero">
+                <div class="container">
+                    <h1>Технології майбутнього вже сьогодні</h1>
+                    <p>Широкий вибір електроніки за найкращими цінами. Гарантія якості та швидка доставка.</p>
+                    <a href="#" class="btn" data-page="catalog">Перейти до каталогу</a>
+                    <a href="#" class="btn btn-secondary" data-page="about">Дізнатися більше</a>
+                </div>
+            </section>
+
+            <section class="categories">
+                <div class="container">
+                    <h2 class="section-title">Популярні категорії</h2>
+                    <div class="categories-grid">
+                        <div class="category-card" data-page="category" data-category="smartphones">
+                            <div class="category-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3>Смартфони</h3>
+                            <p>Понад 500 моделей</p>
+                        </div>
+                        <div class="category-card" data-page="category" data-category="laptops">
+                            <div class="category-icon">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <h3>Ноутбуки</h3>
+                            <p>Для роботи та ігор</p>
+                        </div>
+                        <div class="category-card" data-page="category" data-category="tablets">
+                            <div class="category-icon">
+                                <i class="fas fa-tablet-alt"></i>
+                            </div>
+                            <h3>Планшети</h3>
+                            <p>Різні діагоналі</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
 
-    <!-- Categories -->
-    <section class="categories">
-        <div class="container">
-            <h2 class="section-title">Популярні категорії</h2>
-            <div class="categories-grid">
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Смартфони</h3>
-                    <p>Понад 500 моделей</p>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-laptop"></i>
-                    </div>
-                    <h3>Ноутбуки</h3>
-                    <p>Для роботи та ігор</p>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-tablet-alt"></i>
-                    </div>
-                    <h3>Планшети</h3>
-                    <p>Різні діагоналі</p>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-tv"></i>
-                    </div>
-                    <h3>Телевізори</h3>
-                    <p>4K та Smart TV</p>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-headphones"></i>
-                    </div>
-                    <h3>Аудіо</h3>
-                    <p>Навушники та колонки</p>
-                </a>
-                <a href="#" class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <h3>Геймінг</h3>
-                    <p>Ігрові пристрої</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products -->
-    <section class="featured-products">
-        <div class="container">
-            <h2 class="section-title">Рекомендовані товари</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://via.placeholder.com/200x150/3498db/ffffff?text=iPhone+14" alt="iPhone 14">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Apple iPhone 14 Pro 128GB</h3>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>(124 відгуки)</span>
-                        </div>
-                        <div class="product-price">
-                            39 999 ₴
-                            <span class="product-old-price">42 999 ₴</span>
-                        </div>
-                        <button class="add-to-cart">Додати в кошик</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://via.placeholder.com/200x150/e74c3c/ffffff?text=MacBook" alt="MacBook Pro">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">MacBook Pro 14" M2 Pro</h3>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>(89 відгуків)</span>
-                        </div>
-                        <div class="product-price">89 999 ₴</div>
-                        <button class="add-to-cart">Додати в кошик</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://via.placeholder.com/200x150/27ae60/ffffff?text=Samsung" alt="Samsung TV">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Samsung QLED 4K 55"</h3>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>(67 відгуків)</span>
-                        </div>
-                        <div class="product-price">
-                            32 499 ₴
-                            <span class="product-old-price">35 999 ₴</span>
-                        </div>
-                        <button class="add-to-cart">Додати в кошик</button>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="https://via.placeholder.com/200x150/f39c12/ffffff?text=Sony" alt="Sony Headphones">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Sony WH-1000XM4</h3>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>(156 відгуків)</span>
-                        </div>
-                        <div class="product-price">12 999 ₴</div>
-                        <button class="add-to-cart">Додати в кошик</button>
-                    </div>
+        <!-- Catalog Page -->
+        <div class="page" id="catalog">
+            <div class="container">
+                <h2 class="section-title">Каталог товарів</h2>
+                <div class="products-grid" id="catalogProducts">
+                    <!-- Products will be loaded by JavaScript -->
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Promo Banner -->
-    <section class="promo-banner">
-        <div class="container">
-            <h2>Розпродаж техніки Apple</h2>
-            <p>Знижки до 25% на всі моделі iPhone, MacBook та iPad</p>
-            <a href="#" class="btn">Перейти до акції</a>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features">
-        <div class="container">
-            <h2 class="section-title">Чому обирають нас</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>Швидка доставка</h3>
-                    <p>Доставка по всій Україні за 1-2 дні</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Гарантія якості</h3>
-                    <p>Офіційна гарантія на всі товари</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>Підтримка 24/7</h3>
-                    <p>Наші фахівці завжди готові допомогти</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-undo"></i>
-                    </div>
-                    <h3>Легкий повернення</h3>
-                    <p>14 днів на повернення товару</p>
+        <!-- Category Page -->
+        <div class="page" id="category">
+            <div class="container">
+                <h2 class="section-title" id="categoryTitle">Категорія</h2>
+                <div class="products-grid" id="categoryProducts">
+                    <!-- Category products will be loaded by JavaScript -->
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Newsletter -->
-    <section class="newsletter">
-        <div class="container">
-            <h2>Підпишіться на розсилку</h2>
-            <p>Отримуйте першими інформацію про акції та новинки</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Ваш email" required>
-                <button type="submit" class="btn">Підписатися</button>
-            </form>
+        <!-- Cart Page -->
+        <div class="page" id="cart">
+            <div class="container">
+                <h2 class="section-title">Кошик</h2>
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be loaded by JavaScript -->
+                </div>
+            </div>
         </div>
-    </section>
+
+        <!-- Login Page -->
+        <div class="page" id="login">
+            <div class="container">
+                <h2 class="section-title">Вхід в аккаунт</h2>
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Пароль</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%">Увійти</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div class="page" id="register">
+            <div class="container">
+                <h2 class="section-title">Реєстрація</h2>
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Ім'я</label>
+                        <input type="text" id="registerName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Пароль</label>
+                        <input type="password" id="registerPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%">Зареєструватися</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="about">
+            <div class="container">
+                <h2 class="section-title">Про нас</h2>
+                <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3>Наша історія</h3>
+                    <p>TechHub - це сучасний інтернет-магазин електроніки, який працює на ринку з 2015 року. Ми спеціалізуємося на продажі якісної електроніки від провідних світових брендів.</p>
+                    
+                    <h3>Наші переваги</h3>
+                    <ul>
+                        <li>Швидка доставка по всій Україні</li>
+                        <li>Офіційна гарантія на всі товари</li>
+                        <li>Професійна консультація</li>
+                        <li>Зручні способи оплати</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div class="page" id="contact">
+            <div class="container">
+                <h2 class="section-title">Контакти</h2>
+                <div style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h3>Наші контакти</h3>
+                    <p><strong>Адреса:</strong> м. Київ, вул. Хрещатик, 1</p>
+                    <p><strong>Телефон:</strong> +38 (099) 123-45-67</p>
+                    <p><strong>Email:</strong> info@techhub.ua</p>
+                    <p><strong>Графік роботи:</strong> Пн-Нд: 9:00 - 21:00</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -798,30 +826,17 @@
                 <div class="footer-column">
                     <h3>Категорії</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Смартфони</a></li>
-                        <li><a href="#">Ноутбуки</a></li>
-                        <li><a href="#">Планшети</a></li>
-                        <li><a href="#">Телевізори</a></li>
-                        <li><a href="#">Аудіотехніка</a></li>
+                        <li><a href="#" class="nav-link" data-page="category" data-category="smartphones">Смартфони</a></li>
+                        <li><a href="#" class="nav-link" data-page="category" data-category="laptops">Ноутбуки</a></li>
+                        <li><a href="#" class="nav-link" data-page="category" data-category="tablets">Планшети</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h3>Клієнтам</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Про нас</a></li>
+                        <li><a href="#" class="nav-link" data-page="about">Про нас</a></li>
+                        <li><a href="#" class="nav-link" data-page="contact">Контакти</a></li>
                         <li><a href="#">Доставка та оплата</a></li>
-                        <li><a href="#">Гарантія</a></li>
-                        <li><a href="#">Кредит</a></li>
-                        <li><a href="#">Бонусна програма</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Контакти</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-phone"></i> +38 (099) 123-45-67</li>
-                        <li><i class="fas fa-envelope"></i> info@techhub.ua</li>
-                        <li><i class="fas fa-map-marker-alt"></i> м. Київ, вул. Хрещатик, 1</li>
-                        <li><i class="fas fa-clock"></i> Пн-Нд: 9:00 - 21:00</li>
                     </ul>
                 </div>
             </div>
@@ -832,38 +847,327 @@
     </footer>
 
     <script>
-        // Cart functionality
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const countElement = document.querySelector('.cart-count');
-                let count = parseInt(countElement.textContent);
-                countElement.textContent = count + 1;
+        // Mock Data
+        const products = {
+            smartphones: [
+                { id: 1, name: 'Apple iPhone 14 Pro 128GB', price: 39999, oldPrice: 42999, rating: 4.5, reviews: 124, image: '📱' },
+                { id: 2, name: 'Samsung Galaxy S23 Ultra', price: 44999, oldPrice: 47999, rating: 4.8, reviews: 89, image: '📱' },
+                { id: 3, name: 'Xiaomi 13 Pro', price: 29999, oldPrice: null, rating: 4.3, reviews: 67, image: '📱' }
+            ],
+            laptops: [
+                { id: 4, name: 'MacBook Pro 14" M2 Pro', price: 89999, oldPrice: null, rating: 5.0, reviews: 45, image: '💻' },
+                { id: 5, name: 'Dell XPS 13', price: 45999, oldPrice: 49999, rating: 4.6, reviews: 78, image: '💻' },
+                { id: 6, name: 'ASUS ROG Zephyrus', price: 69999, oldPrice: 74999, rating: 4.7, reviews: 56, image: '💻' }
+            ],
+            tablets: [
+                { id: 7, name: 'iPad Pro 12.9"', price: 52999, oldPrice: 55999, rating: 4.9, reviews: 34, image: '📟' },
+                { id: 8, name: 'Samsung Galaxy Tab S8', price: 32999, oldPrice: null, rating: 4.4, reviews: 23, image: '📟' },
+                { id: 9, name: 'Lenovo Tab P12', price: 19999, oldPrice: 21999, rating: 4.2, reviews: 18, image: '📟' }
+            ]
+        };
+
+        const categoryTitles = {
+            smartphones: 'Смартфони',
+            laptops: 'Ноутбуки',
+            tablets: 'Планшети',
+            tvs: 'Телевізори',
+            audio: 'Аудіотехніка'
+        };
+
+        // State
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentPage = 'home';
+        let currentCategory = '';
+
+        // DOM Elements
+        const loading = document.getElementById('loading');
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const cartCount = document.querySelector('.cart-count');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1000);
+
+            updateCartCount();
+            loadCatalogProducts();
+        });
+
+        // Navigation
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('data-page');
+                const category = this.getAttribute('data-category');
                 
-                // Animation
-                this.textContent = 'Додано!';
-                this.style.background = 'var(--success)';
-                setTimeout(() => {
-                    this.textContent = 'Додати в кошик';
-                    this.style.background = '';
-                }, 2000);
+                if (page === 'category' && category) {
+                    showCategory(category);
+                } else {
+                    showPage(page);
+                }
             });
         });
 
-        // Search functionality
-        document.querySelector('.search-box button').addEventListener('click', function() {
-            const searchTerm = document.querySelector('.search-box input').value;
-            if (searchTerm.trim()) {
-                alert('Пошук: ' + searchTerm);
+        // Page Management
+        function showPage(pageName) {
+            pages.forEach(page => page.classList.remove('active'));
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            document.getElementById(pageName).classList.add('active');
+            
+            // Update active nav link
+            document.querySelector(`.nav-link[data-page="${pageName}"]`)?.classList.add('active');
+            
+            currentPage = pageName;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function showCategory(category) {
+            showPage('category');
+            currentCategory = category;
+            
+            // Update title
+            document.getElementById('categoryTitle').textContent = categoryTitles[category] || 'Категорія';
+            
+            // Load products
+            loadCategoryProducts(category);
+        }
+
+        // Product Loading
+        function loadCatalogProducts() {
+            const container = document.getElementById('catalogProducts');
+            container.innerHTML = '';
+            
+            Object.values(products).flat().forEach(product => {
+                container.appendChild(createProductCard(product));
+            });
+        }
+
+        function loadCategoryProducts(category) {
+            const container = document.getElementById('categoryProducts');
+            container.innerHTML = '';
+            
+            if (products[category]) {
+                products[category].forEach(product => {
+                    container.appendChild(createProductCard(product));
+                });
+            }
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-image">
+                    <span style="font-size: 3rem;">${product.image}</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <div class="product-rating">
+                        ${generateStars(product.rating)}
+                        <span>(${product.reviews} відгуків)</span>
+                    </div>
+                    <div class="product-price">
+                        ${product.price} ₴
+                        ${product.oldPrice ? `<span class="product-old-price">${product.oldPrice} ₴</span>` : ''}
+                    </div>
+                    <button class="add-to-cart" data-id="${product.id}">Додати в кошик</button>
+                </div>
+            `;
+            
+            card.querySelector('.add-to-cart').addEventListener('click', function() {
+                addToCart(product.id);
+            });
+            
+            return card;
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(rating)) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        // Cart Functionality
+        function addToCart(productId) {
+            const product = Object.values(products).flat().find(p => p.id === productId);
+            if (product) {
+                const existingItem = cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        ...product,
+                        quantity: 1
+                    });
+                }
+                
+                updateCartCount();
+                saveCart();
+                showNotification(`Товар "${product.name}" додано до кошика!`);
+            }
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update cart page if it's active
+            if (currentPage === 'cart') {
+                renderCart();
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 40px;">Кошик порожній</p>';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-image">
+                            <span style="font-size: 2rem;">${item.image}</span>
+                        </div>
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <div class="product-rating">
+                                ${generateStars(item.rating)}
+                            </div>
+                        </div>
+                        <div class="cart-item-price">${item.price} ₴</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="changeQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <div style="margin-left: 20px; font-weight: 700;">${itemTotal} ₴</div>
+                        <button class="btn" style="margin-left: 20px; background: var(--accent);" onclick="removeFromCart(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div class="cart-total">
+                    Загальна сума: ${total} ₴
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" style="padding: 15px 30px;">Оформити замовлення</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function changeQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartCount();
+                    saveCart();
+                }
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            saveCart();
+        }
+
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Search
+        searchBtn.addEventListener('click', function() {
+            const query = searchInput.value.trim();
+            if (query) {
+                alert(`Пошук: ${query}`);
+                // Here you would normally filter products
             }
         });
 
-        // Newsletter form
-        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = this.querySelector('input').value;
-            alert('Дякуємо за підписку! На адресу ' + email + ' відправлено лист з підтвердженням.');
-            this.reset();
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
         });
+
+        // Forms
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            alert(`Вхід виконано для: ${email}`);
+            this.reset();
+            showPage('home');
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            alert(`Реєстрація успішна для: ${name}`);
+            this.reset();
+            showPage('home');
+        });
+
+        // Notifications
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: var(--success);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Make functions global for HTML onclick
+        window.changeQuantity = changeQuantity;
+        window.removeFromCart = removeFromCart;
     </script>
 </body>
 </html>
